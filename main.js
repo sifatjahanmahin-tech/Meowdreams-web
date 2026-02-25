@@ -150,4 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
         el.setAttribute('data-animate', '');
         observer.observe(el);
     });
+
+    // Spotlight Hover Effect for Cards
+    document.getElementById('product-grid').addEventListener('mousemove', e => {
+        for (const card of document.querySelectorAll('.product-card')) {
+            const rect = card.getBoundingClientRect(),
+                x = e.clientX - rect.left,
+                y = e.clientY - rect.top;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        };
+    });
 });

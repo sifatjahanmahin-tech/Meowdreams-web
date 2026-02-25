@@ -57,6 +57,37 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     transition: background-color var(--transition-smooth), color var(--transition-smooth);
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Subtle Animated Grid Background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--color-border) 20%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 20%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+    /* Multiple of 8 */
+    z-index: -1;
+    opacity: 0.5;
+    animation: grid-drift 40s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes grid-drift {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 64px 64px;
+    }
 }
 
 .container {
@@ -173,28 +204,75 @@ nav {
 
 /* Hero Section */
 #hero {
-    padding: var(--space-10) 0;
+    padding: calc(var(--space-10) * 1.5) 0;
     text-align: center;
-    background: radial-gradient(circle at center, var(--color-surface) 0%, var(--color-bg) 70%);
+    background: radial-gradient(circle at center top, color-mix(in srgb, var(--color-surface) 60%, transparent) 0%, var(--color-bg) 80%);
     transition: background var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background glow orb */
+#hero::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-text) 5%, transparent) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(40px);
+    animation: pulse-glow 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+    0% {
+        transform: translate(-50%, -10px) scale(0.9);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translate(-50%, 10px) scale(1.1);
+        opacity: 1;
+    }
 }
 
 #hero h1 {
-    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-size: clamp(3rem, 8vw, 5rem);
     font-weight: 600;
     line-height: 1.1;
-    margin-bottom: var(--space-3);
-    letter-spacing: -1px;
+    margin-bottom: var(--space-4);
+    letter-spacing: -1.5px;
     background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-dim) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    /* 8px grid aligned float */
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 #hero p {
     font-size: 1.25rem;
     color: var(--color-text-dim);
-    max-width: 600px;
-    margin: 0 auto var(--space-4);
+    max-width: 640px;
+    margin: 0 auto var(--space-5);
+    line-height: 1.6;
 }
 
 /* Buttons */
@@ -269,7 +347,9 @@ nav {
 }
 
 .product-card {
-    background: var(--color-surface);
+    background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -277,6 +357,24 @@ nav {
     position: relative;
     display: flex;
     flex-direction: column;
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--color-text) 3%, transparent), transparent 40%);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.product-card:hover::before {
+    opacity: 1;
 }
 
 .product-card:hover {
